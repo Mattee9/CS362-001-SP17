@@ -22,31 +22,31 @@ public class ApptRandomTest {
 	 * Return a randomly selected method to be tests !.
 	 */
     public static String RandomSelectMethod(Random random){
-        String[] methodArray = new String[] {"setTitle","setDescription"};// The list of the of methods to be tested in the Appt class
+        String[] methodArray = new String[] {"isValid","setDescription"};// The list of the of methods to be tested in the Appt class
 
     	int n = random.nextInt(methodArray.length);// get a random number between 0 (inclusive) and  methodArray.length (exclusive)
-    	            
-        return methodArray[n] ; // return the method name 
+
+        return methodArray[n] ; // return the method name
         }
-	
+
     /**
      * Generate Random Tests that tests Appt Class.
      */
 	 @Test
-	  public void radnomtest()  throws Throwable  {
+	  public void randomtest()  throws Throwable  {
 
 		 long startTime = Calendar.getInstance().getTimeInMillis();
 		 long elapsed = Calendar.getInstance().getTimeInMillis() - startTime;
 
-		 
-		 System.out.println("Start testing...");
-		 
-		 
+
+		 System.out.println("Start testing the Appt class...");
+
+
 			for (int iteration = 0; elapsed < TestTimeout; iteration++) {
-				long randomseed =10;//System.currentTimeMillis();
+				long randomseed = System.currentTimeMillis();
 	//			System.out.println(" Seed:"+randomseed );
 				Random random = new Random(randomseed);
-				
+
 				 int startHour=13;
 				 int startMinute=30;
 				 int startDay=10;
@@ -54,7 +54,7 @@ public class ApptRandomTest {
 				 int startYear=2017;
 				 String title="Birthday Party";
 				 String description="This is my birthday party.";
-				 //Construct a new Appointment object with the initial data	 
+				 //Construct a new Appointment object with the initial data
 				 Appt appt = new Appt(startHour,
 				          startMinute ,
 				          startDay ,
@@ -64,23 +64,67 @@ public class ApptRandomTest {
 				         description);
 				for (int i = 0; i < NUM_TESTS; i++) {
 					String methodName = ApptRandomTest.RandomSelectMethod(random);
-					   if (methodName.equals("setTitle")){
-						   String newTitle=(String) ValuesGenerator.getString(random);
-						   appt.setTitle(newTitle);						   
+					   if (methodName.equals("setDescription")){
+						   String newDescription= (String) ValuesGenerator.getString(random);
+						   appt.setDescription(newDescription);
+						 // System.out.println("Gen: " + newDescription);
+                         //  System.out.println("Appt: " + appt.getDescription());
+						   assertTrue((appt.getDescription()== newDescription) || (appt.getDescription() == ""));
 						}
-					
+						if(methodName.equals("isValid")){
+
+							appt.setStartMonth(ValuesGenerator.getRandomIntBetween(random,1,12));
+					   		assertTrue(appt.getValid());
+                            appt.setStartMonth(ValuesGenerator.getRandomIntBetween(random,13,999));
+                            assertFalse(appt.getValid());
+                            appt.setStartMonth(ValuesGenerator.getRandomIntBetween(random,-999,0));
+                            assertFalse(appt.getValid());
+                            appt.setStartMonth(ValuesGenerator.getRandomIntBetween(random,1,12));
+
+                            //
+
+                            appt.setStartDay(ValuesGenerator.getRandomIntBetween(random,1,31));
+					   		assertTrue(appt.getValid());
+                            appt.setStartDay(ValuesGenerator.getRandomIntBetween(random,32,999));
+                            assertFalse(appt.getValid());
+                            appt.setStartDay(ValuesGenerator.getRandomIntBetween(random,-999,0));
+                            assertFalse(appt.getValid());
+                            appt.setStartDay(ValuesGenerator.getRandomIntBetween(random,1,31));
+
+                            //
+
+					   		appt.setStartHour(ValuesGenerator.getRandomIntBetween(random,0,23));
+					   		assertTrue(appt.getValid());
+                            appt.setStartHour(ValuesGenerator.getRandomIntBetween(random,24,999));
+                            assertFalse(appt.getValid());
+                            appt.setStartHour(ValuesGenerator.getRandomIntBetween(random,-999,-1));
+                            assertFalse(appt.getValid());
+                            appt.setStartHour(ValuesGenerator.getRandomIntBetween(random,0,23));
+
+                            //
+
+					   		appt.setStartMinute(ValuesGenerator.getRandomIntBetween(random,0,59));
+					   		assertTrue(appt.getValid());
+                            appt.setStartMinute(ValuesGenerator.getRandomIntBetween(random,60,999));
+                            assertFalse(appt.getValid());
+                            appt.setStartMinute(ValuesGenerator.getRandomIntBetween(random,-999,-1));
+                            assertFalse(appt.getValid());
+                            appt.setStartMinute(ValuesGenerator.getRandomIntBetween(random,0,59));
+					   		
+						}
+
 				}
-				
+
 				 elapsed = (Calendar.getInstance().getTimeInMillis() - startTime);
 			        if((iteration%10000)==0 && iteration!=0 )
 			              System.out.println("elapsed time: "+ elapsed + " of "+TestTimeout);
-			 
+
 			}
-	 
-	 
-		 System.out.println("Done testing...");
+
+
+		 System.out.println("Done testing Appt class...");
 	 }
 
 
-	
+
 }
